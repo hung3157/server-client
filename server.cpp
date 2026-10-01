@@ -10,6 +10,7 @@
 
 int main() {
     int server_fd, client_fd;
+    
     struct sockaddr_in server_addr; 
     struct sockaddr_in client_addr;
 
