@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>
@@ -110,14 +111,17 @@ int main() {
             close(server_fd);
             printf("Client connected.\n");
 
+            // echo 
+            
             char buffer[BUFFER_SIZE];
 
             ssize_t bytes_received;
+
             while ((bytes_received = recv(client_fd, buffer, sizeof(buffer), 0)) > 0) {
+
                 ssize_t total_sent = 0;
                 while (total_sent < bytes_received) {
-                    ssize_t bytes_sent = send(client_fd, buffer + total_sent,
-                                              bytes_received - total_sent, 0);
+                    ssize_t bytes_sent = send(client_fd, buffer + total_sent, bytes_received - total_sent, 0);
                     
                     if (bytes_sent < 0) {
                         if (errno == EINTR) {
@@ -127,6 +131,7 @@ int main() {
                         close(client_fd);
                         _exit(EXIT_FAILURE);
                     }
+
                     total_sent += bytes_sent;
                 }
             }
@@ -134,6 +139,7 @@ int main() {
             if (bytes_received < 0) {
                 perror("recv() failed");
             }
+
             close(client_fd);
             _exit(EXIT_SUCCESS);
         }
